@@ -31,15 +31,16 @@ d3.json("flare.json", function(error, root) {
     var value = this.value === "count"
         ? function() { return 1; }
         : function(d) { return d.size; };
-  });
-
   var point = d3.mouse(this),
-      node = {id: ++lastNodeId, reflexive: false};
+  node = {id: ++lastNodeId, reflexive: false};
   node.x = point[0];
   node.y = point[1];
   nodes.push(node);
 
   restart();
+  });
+
+
 
 });
 
