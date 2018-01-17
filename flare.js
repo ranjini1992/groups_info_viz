@@ -37,7 +37,7 @@ d3.json("flare.json", function(error, data) {
    
         
     });
-     //restart();
+     restart();
 
 });
  
