@@ -24,6 +24,18 @@ var nodes = [
     {source: nodes[1], target: nodes[2], left: false, right: true }
   ];
 
+d3.json("flare.json", function(error, root) {
+  if (error) throw error;
+
+  d3.selectAll("input").on("change", function change() {
+    var value = this.value === "count"
+        ? function() { return 1; }
+        : function(d) { return d.size; };
+ alert(value);
+
+  });
+});
+
 // init D3 force layout
 var force = d3.layout.force()
     .nodes(nodes)
