@@ -24,25 +24,23 @@ var nodes = [
     {source: nodes[1], target: nodes[2], left: false, right: true }
   ];
 
-d3.json("flare.json", function(error, root) {
+d3.json("flare.json", function(error, data) {
   if (error) throw error;
 
-  d3.selectAll("input").on("change", function change() {
-    var value = this.value === "count"
-        ? function() { return 1; }
-        : function(d) { return d.size; };
-  var point = d3.mouse(this),
-  node = {id: ++lastNodeId, reflexive: false};
-  node.x = point[0];
-  node.y = point[1];
-  nodes.push(node);
+   data.forEach(function(d) {
 
-  restart();
-  });
+      node = {id: ++lastNodeId, reflexive: false};
+      node.x = point[0];
+      node.y = point[1];
+      nodes.push(node);
 
-
+   
+        
+    });
+     //restart();
 
 });
+ 
 
 // init D3 force layout
 var force = d3.layout.force()
