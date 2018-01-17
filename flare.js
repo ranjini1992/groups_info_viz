@@ -28,7 +28,7 @@ d3.json("flare.json", function(error, data) {
   if (error) throw error;
 
    data.forEach(function(d) {
-
+      var point = d3.mouse(this),
       node = {id: ++lastNodeId, reflexive: false};
       node.x = point[0];
       node.y = point[1];
