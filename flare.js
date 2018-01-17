@@ -26,12 +26,12 @@ var nodes = [
 
 d3.json("flare.json", function(error, data) {
   if (error) throw error;
-
+  var count= 0
    data.forEach(function(d) {
-      var point = d3.mouse(this),
+      count++;
       node = {id: ++lastNodeId, reflexive: false};
-      node.x = point[0];
-      node.y = point[1];
+      node.x = 100+count*2;
+      node.y = 100+count*2;
       nodes.push(node);
 
    
