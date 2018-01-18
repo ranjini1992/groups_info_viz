@@ -1,5 +1,28 @@
+
+/*Copyright (c) 2013-2015 Ross Kirsling
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
 // set up SVG for D3
-var width  = 1000,
+var width  = 1250,
     height = 1000,
     colors = d3.scale.category10();
 
@@ -15,31 +38,36 @@ var svg = d3.select('body')
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
 var nodes = [
     {id: 0, reflexive: false},
-    //{id: 1, reflexive: true },
-    //{id: 2, reflexive: false}
+    {id: 1, reflexive: true },
+    {id: 2, reflexive: false}
   ],
- // lastNodeId = 2,
- lastNodeId = 0,
-    links = [];
+  lastNodeId = 2,
+  links = [
+    {source: nodes[0], target: nodes[1], left: false, right: true },
+    {source: nodes[1], target: nodes[2], left: false, right: true }
+  ];
 
-d3.json("flare.json", function(error, data) {
+  d3.json("https://ranjini1992.github.io/groups_info_viz/flare.json", function(error, data) {
   if (error) throw error;
   var count= 0
    data.forEach(function(d) {
       count++;
       node = {id: ++lastNodeId, reflexive: false};
-      node.x = 100+count*2;
-      node.y = 100+count*2;
+      node.x = 50;
+      node.y = 50;
       nodes.push(node);
-
-   
+      var p = {source: nodes[lastNodeId-1], target: nodes[lastNodeId], left: false, right: true };
+       var q = {source: nodes[lastNodeId-2], target: nodes[lastNodeId], left: false, right: true };
+       var r = {source: nodes[lastNodeId-3], target: nodes[lastNodeId], left: false, right: true };
+      links.push(p);
+      links.push(q);
+      links.push(r);
         
     });
 
      restart();
 
 });
- 
 
 // init D3 force layout
 var force = d3.layout.force()
@@ -94,7 +122,7 @@ function resetMouseVars() {
   mouseup_node = null;
   mousedown_link = null;
 }
-/*
+
 // update force layout (called automatically each iteration)
 function tick() {
   // draw directed edges with proper padding from node centers
@@ -116,7 +144,7 @@ function tick() {
   circle.attr('transform', function(d) {
     return 'translate(' + d.x + ',' + d.y + ')';
   });
-}*/
+}
 
 // update graph (called when needed)
 function restart() {
@@ -255,7 +283,7 @@ function restart() {
   // set the graph in motion
   force.start();
 }
-/*
+
 function mousedown() {
   // prevent I-bar on drag
   //d3.event.preventDefault();
@@ -387,4 +415,3 @@ d3.select(window)
   .on('keydown', keydown)
   .on('keyup', keyup);
 restart();
-*/

@@ -40,6 +40,11 @@ circle.node {
   cursor: pointer;
 }
 
+circle.node:hover {
+  stroke-width: 1.5px;
+  cursor: pointer;
+}
+
 circle.node.reflexive {
   stroke: #000 !important;
   stroke-width: 2.5px;
