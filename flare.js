@@ -1,6 +1,6 @@
 // set up SVG for D3
-var width  = 1000,
-    height = 1000,
+var width  = 2000,
+    height = 2000,
     colors = d3.scale.category10();
 
 var svg = d3.select('body')
@@ -14,15 +14,13 @@ var svg = d3.select('body')
 //  - reflexive edges are indicated on the node (as a bold black circle).
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
 var nodes = [
-    {id: 0, reflexive: false},
-    {id: 1, reflexive: true },
-    {id: 2, reflexive: false}
+   // {id: 0, reflexive: false},
+    //{id: 1, reflexive: true },
+    //{id: 2, reflexive: false}
   ],
-  lastNodeId = 2,
-  links = [
-    {source: nodes[0], target: nodes[1], left: false, right: true },
-    {source: nodes[1], target: nodes[2], left: false, right: true }
-  ];
+ // lastNodeId = 2,
+ lastNodeId = -1,
+    links = [];
 
 d3.json("flare.json", function(error, data) {
   if (error) throw error;
@@ -34,9 +32,13 @@ d3.json("flare.json", function(error, data) {
       node.y = 100+count*2;
       nodes.push(node);
 
-   
+    if(lastNodeId > 0){
+     var array = {source: nodes[lastNodeId - 1], target: nodes[lastNodeId], left: false, right: true }
+     links.push(array);
+    }
         
     });
+
      restart();
 
 });
@@ -95,7 +97,7 @@ function resetMouseVars() {
   mouseup_node = null;
   mousedown_link = null;
 }
-
+/*
 // update force layout (called automatically each iteration)
 function tick() {
   // draw directed edges with proper padding from node centers
@@ -117,7 +119,7 @@ function tick() {
   circle.attr('transform', function(d) {
     return 'translate(' + d.x + ',' + d.y + ')';
   });
-}
+}*/
 
 // update graph (called when needed)
 function restart() {
@@ -299,7 +301,7 @@ function mouseup() {
   // clear mouse event vars
   resetMouseVars();
 }
-*/
+
 function spliceLinksForNode(node) {
   var toSplice = links.filter(function(l) {
     return (l.source === node || l.target === node);
@@ -311,7 +313,7 @@ function spliceLinksForNode(node) {
 
 // only respond once per keydown
 var lastKeyDown = -1;
-/*
+
 function keydown() {
   d3.event.preventDefault();
 
