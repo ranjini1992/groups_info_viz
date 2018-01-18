@@ -256,7 +256,7 @@ function restart() {
   // set the graph in motion
   force.start();
 }
-
+/*
 function mousedown() {
   // prevent I-bar on drag
   //d3.event.preventDefault();
@@ -299,7 +299,7 @@ function mouseup() {
   // clear mouse event vars
   resetMouseVars();
 }
-
+*/
 function spliceLinksForNode(node) {
   var toSplice = links.filter(function(l) {
     return (l.source === node || l.target === node);
@@ -311,7 +311,7 @@ function spliceLinksForNode(node) {
 
 // only respond once per keydown
 var lastKeyDown = -1;
-
+/*
 function keydown() {
   d3.event.preventDefault();
 
@@ -388,3 +388,4 @@ d3.select(window)
   .on('keydown', keydown)
   .on('keyup', keyup);
 restart();
+*/
