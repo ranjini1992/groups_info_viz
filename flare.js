@@ -14,12 +14,12 @@ var svg = d3.select('body')
 //  - reflexive edges are indicated on the node (as a bold black circle).
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
 var nodes = [
-   // {id: 0, reflexive: false},
+    {id: 0, reflexive: false},
     //{id: 1, reflexive: true },
     //{id: 2, reflexive: false}
   ],
  // lastNodeId = 2,
- lastNodeId = -1,
+ lastNodeId = 0,
     links = [];
 
 d3.json("flare.json", function(error, data) {
