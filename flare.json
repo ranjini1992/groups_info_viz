@@ -1,25 +1,5 @@
 [
  {
-   "DATETIME": "Timestamp",
-   "NAME": "Alias",
-   "COURSE": "What degree are you pursuing?",
-   "MAJOR": "What is your Major?",
-   "HOBBIES": "Please, tell me about yourself. What interest you? Do you have any hobbies?",
-   "GOALS": "What do you expect to learn in Information Visualization? How do expect to use what you learn?",
-   "INFO_VIZ": "How would you rate your Information Visualization skills?",
-   "STATISTICS": "How would you rate your statistical skills?",
-   "MATH": "How would you rate your mathematics skills?",
-   "ART": "How would you rate your drawing and artistic skills?",
-   "COMPUTER_USE": "How would you rate your computer usage skills?",
-   "PROGRAMMING": "How would you rate your programming skills?",
-   "GRAPHIC_PROGRAMMING": "How would you rate your computer graphics programming skills?",
-   "HCI_PROGRAMMING": "How would you rate your human-computer interaction programming skills?",
-   "UX": "How would you rate your user experience evaluation skills?",
-   "COMMUNICATION": "How would you rate your communication skills?",
-   "COLLAB": "How would you rate your collaboration skills?",
-   "CODE_REP": "How would you rate your code repository skills?"
- },
- {
    "DATETIME": "1/15/2018 12:30:24",
    "NAME": "Hannah Abbott",
    "COURSE": "Master in Science",

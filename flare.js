@@ -6,8 +6,8 @@ var width  = 1000,
 var svg = d3.select('body')
   .append('svg')
   .attr('oncontextmenu', 'return false;')
-  .attr('width', width)
-  .attr('height', height);
+  .attr('width', "100%")
+  .attr('height', "100%");
 
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
