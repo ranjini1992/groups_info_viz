@@ -1,13 +1,13 @@
 // set up SVG for D3
-var width  = 1000,
+var width  = 500,
     height = 1000,
     colors = d3.scale.category10();
 
 var svg = d3.select('body')
   .append('svg')
   .attr('oncontextmenu', 'return false;')
-  .attr('width', "100%")
-  .attr('height', "100%");
+  .attr('width', width)
+  .attr('height', height);
 
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
