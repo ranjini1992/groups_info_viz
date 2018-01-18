@@ -1,6 +1,6 @@
 // set up SVG for D3
-var width  = 2000,
-    height = 2000,
+var width  = 1000,
+    height = 1000,
     colors = d3.scale.category10();
 
 var svg = d3.select('body')
@@ -32,10 +32,7 @@ d3.json("flare.json", function(error, data) {
       node.y = 100+count*2;
       nodes.push(node);
 
-    if(lastNodeId > 0){
-     var array = {source: nodes[lastNodeId - 1], target: nodes[lastNodeId], left: false, right: true }
-     links.push(array);
-    }
+   
         
     });
 
