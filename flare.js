@@ -23,7 +23,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // set up SVG for D3
 var width  = 1250,
-    height = 1000,
+    height = 1250,
     colors = d3.scale.category10();
 
 var svg = d3.select('body')
@@ -32,38 +32,126 @@ var svg = d3.select('body')
   .attr('width', width)
   .attr('height', height);
 
+var skills = ["INFO_VIZ",
+   "STATISTICS",
+   "MATH",
+   "ART",
+   "COMPUTER_USE",
+   "PROGRAMMING",
+   "GRAPHIC_PROGRAMMING",
+   "HCI_PROGRAMMING",
+   "UX",
+   "COMMUNICATION",
+   "COLLAB",
+   "CODE_REP"]
+
+//orange or red is programming, blue is communication collab, pink is art, green is ux info viz
+var skill_colours= ["#00FF11",
+  "#FF8484",
+  "#FF0000",
+  "#FF00FF",
+  "#FFAB00",
+  "#FF9100",
+  "#FF6600",
+  "#FFBC00",
+  "#01900A",
+  "#003CFF",
+  "#00DEFF",
+  "#FFE600"
+]
+
+//good team = 3 programmers, 2 communication/collab, 1 art, 2 others
+//10 teams: min 8 members max 9 members
+
+var teams =[[],[],[],[],[],[],[],[],[],[]]
+
+
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
 //  - reflexive edges are indicated on the node (as a bold black circle).
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
-var nodes = [
-    {id: 0, reflexive: false},
-    {id: 1, reflexive: true },
-    {id: 2, reflexive: false}
+ /*var nodes = [
+    {id: 100, reflexive: true},
+    {id: 101, reflexive: true },
+    {id: 102, reflexive: true},
+    {id: 103, reflexive: true},
+    {id: 104, reflexive: true },
+    {id: 105, reflexive: true},
+    {id: 106, reflexive: true},
+    {id: 107, reflexive: true },
+    {id: 108, reflexive: true},
+    {id: 109, reflexive: true}
   ],
   lastNodeId = 2,
-  links = [
+   links = [
     {source: nodes[0], target: nodes[1], left: false, right: true },
     {source: nodes[1], target: nodes[2], left: false, right: true }
-  ];
+  ];*/
+  var nodes = [
+    {id: 0, reflexive: true},
+    {id: 1, reflexive: true},
+    {id: 2, reflexive: true},
+    {id: 3, reflexive: true},
+    {id: 4, reflexive: true },
+    {id: 5, reflexive: true},
+    {id: 6, reflexive: true},
+    {id: 7, reflexive: true },
+    {id: 8, reflexive: true},
+    {id: 9, reflexive: true}],
+  lastNodeId = 9,
+  links = [];
 
   d3.json("https://ranjini1992.github.io/groups_info_viz/flare.json", function(error, data) {
   if (error) throw error;
   var count= 0
-   data.forEach(function(d) {
+   data.forEach(function(student) {
       count++;
       node = {id: ++lastNodeId, reflexive: false};
       node.x = 50;
       node.y = 50;
+      node.student = student;
+      top_skill_index = 0;
+      for(var i =0; i < skills.length; i++){
+        if(Number(student[skills[i]]) > Number(student[skills[top_skill_index]])){
+          top_skill_index = i;
+        }
+      }
+      node.top_skill_index = top_skill_index;
+      node.colour = skill_colours[top_skill_index];
+
       nodes.push(node);
-      var p = {source: nodes[lastNodeId-1], target: nodes[lastNodeId], left: false, right: true };
-       var q = {source: nodes[lastNodeId-2], target: nodes[lastNodeId], left: false, right: true };
-       var r = {source: nodes[lastNodeId-3], target: nodes[lastNodeId], left: false, right: true };
-      links.push(p);
-      links.push(q);
-      links.push(r);
-        
+    /*  if(lastNodeId > 8 ){
+        var p = {source: nodes[lastNodeId-1], target: nodes[lastNodeId], left: false, right: true };
+        var q = {source: nodes[lastNodeId-2], target: nodes[lastNodeId], left: false, right: true };
+        var r = {source: nodes[lastNodeId-3], target: nodes[lastNodeId], left: false, right: true };
+        var s = {source: nodes[lastNodeId-4], target: nodes[lastNodeId], left: false, right: true };
+        var t = {source: nodes[lastNodeId-5], target: nodes[lastNodeId], left: false, right: true };
+        var u = {source: nodes[lastNodeId-6], target: nodes[lastNodeId], left: false, right: true };
+        var v = {source: nodes[lastNodeId-7], target: nodes[lastNodeId], left: false, right: true };
+        links.push(p);
+        links.push(q);
+        links.push(r);
+        links.push(s);
+        links.push(t);
+        links.push(u);
+        links.push(v);
+      }*/
+      for(var i =0; i < teams.length; i++){
+        if(teams[i].length < 9 ){
+          teams[i].push(node.id)
+          break;
+        }
+      }
+
     });
+      for(var i =0; i < teams.length; i++){
+        console.log(teams[i])
+        nodes[i].colour = "#FFFFFF"
+        for(var j =0; j < teams[i].length; j++){
+           var a = {source: nodes[i], target: nodes[teams[i][j]], left: false, right: true };
+           links.push(a);
+        }
+      }
 
      restart();
 
@@ -74,7 +162,7 @@ var force = d3.layout.force()
     .nodes(nodes)
     .links(links)
     .size([width, height])
-    .linkDistance(150)
+    .linkDistance(50)
     .charge(-500)
     .on('tick', tick)
 
@@ -184,7 +272,8 @@ function restart() {
 
   // update existing nodes (reflexive & selected visual states)
   circle.selectAll('circle')
-    .style('fill', function(d) { return (d === selected_node) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
+   // .style('fill', function(d) { return (d === selected_node) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
+    .style('fill', function(d) { return d.colour; })
     .classed('reflexive', function(d) { return d.reflexive; });
 
   // add new nodes
@@ -192,13 +281,14 @@ function restart() {
 
   g.append('svg:circle')
     .attr('class', 'node')
-    .attr('r', 12)
-    .style('fill', function(d) { return (d === selected_node) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
+    .attr('r', 20)
+  //  .style('fill', function(d) { return (d === selected_node) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
+    .style('fill', function(d) { return d.colour; })
     .style('stroke', function(d) { return d3.rgb(colors(d.id)).darker().toString(); })
     .classed('reflexive', function(d) { return d.reflexive; })
     .on('mouseover', function(d) {
       if(!mousedown_node || d === mousedown_node) return;
-      // enlarge target node
+      //enlarge target node
       d3.select(this).attr('transform', 'scale(1.1)');
     })
     .on('mouseout', function(d) {
@@ -271,11 +361,12 @@ function restart() {
     });
 
   // show node IDs
+
   g.append('svg:text')
       .attr('x', 0)
       .attr('y', 4)
       .attr('class', 'id')
-      .text(function(d) { return d.id; });
+      .text(function(d) { if(d.id < 10) return "TEAM"; return (d.id + 1); });
 
   // remove old nodes
   circle.exit().remove();
@@ -294,11 +385,11 @@ function mousedown() {
   if(d3.event.ctrlKey || mousedown_node || mousedown_link) return;
 
   // insert new node at point
-  var point = d3.mouse(this),
+ /* var point = d3.mouse(this),
       node = {id: ++lastNodeId, reflexive: false};
   node.x = point[0];
   node.y = point[1];
-  nodes.push(node);
+  nodes.push(node);*/
 
   restart();
 }
