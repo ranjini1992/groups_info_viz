@@ -21,10 +21,20 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+/*Code was modified from the original directed graph editor by student Ranjini Aravind */
+
 // set up SVG for D3
 var width  = 1250,
     height = 1250,
     colors = d3.scale.category10();
+
+var div = d3.select("body").append("div") 
+    .attr("class", "tooltip")       
+    .style("opacity", 0);
+
+var div = d3.select("body").append("div") 
+    .attr("class", "tooltip")       
+    .style("opacity", 0);
 
 var svg = d3.select('body')
   .append('svg')
@@ -358,6 +368,21 @@ function restart() {
       selected_link = link;
       selected_node = null;
       restart();
+    })
+    .on('mouseover', function(d) { 
+      if(d.id < 10) return;   
+      div.transition()    
+        .duration(200)    
+        .style("opacity", .9);    
+      div .html(d.student.MAJOR)  
+        .style("left", (d3.event.pageX) + "px")   
+        .style("top", (d3.event.pageY - 28) + "px");  
+    })          
+    .on('mouseout', function(d) { 
+      if(d.id < 10) return;    
+      div.transition()    
+        .duration(500)    
+        .style("opacity", 0); 
     });
 
   // show node IDs
@@ -383,7 +408,6 @@ function mousedown() {
   svg.classed('active', true);
 
   if(d3.event.ctrlKey || mousedown_node || mousedown_link) return;
-
   // insert new node at point
  /* var point = d3.mouse(this),
       node = {id: ++lastNodeId, reflexive: false};
@@ -501,7 +525,8 @@ function keyup() {
 // app starts here
 svg.on('mousedown', mousedown)
   .on('mousemove', mousemove)
-  .on('mouseup', mouseup);
+  .on('mouseup', mouseup)
+
 d3.select(window)
   .on('keydown', keydown)
   .on('keyup', keyup);
