@@ -33,8 +33,9 @@ var div = d3.select("body").append("div")
     .style("opacity", 0);
 
 var popup_div = d3.select("body").append("div") 
-    .attr("class", "studentDetails")       
-    .style("opacity", 0);
+    .attr("class", "studentDetails")          
+    .style("opacity", .9)    
+    .html("<h2>Information visualization Assignment</h2></br> Circle colours: orange or red is programming, blue is communication or collaboration, pink is art, green is UX and info viz.</br> Hover over the circles to see student details.");  
 
 var svg = d3.select('body')
   .append('svg')
@@ -390,8 +391,9 @@ function restart() {
         .duration(500)    
         .style("opacity", 0); 
       popup_div.transition()    
-        .duration(500)    
-        .style("opacity", 0); 
+        .duration(200)    
+        .style("opacity", .9);    
+      popup_div .html("<h2>Information visualization Assignment</h2>");  
     });
 
   // show node IDs
