@@ -32,8 +32,8 @@ var div = d3.select("body").append("div")
     .attr("class", "tooltip")       
     .style("opacity", 0);
 
-var div = d3.select("body").append("div") 
-    .attr("class", "tooltip")       
+var popup_div = d3.select("body").append("div") 
+    .attr("class", "studentDetails")       
     .style("opacity", 0);
 
 var svg = d3.select('body')
@@ -377,10 +377,19 @@ function restart() {
       div .html(d.student.MAJOR)  
         .style("left", (d3.event.pageX) + "px")   
         .style("top", (d3.event.pageY - 28) + "px");  
+      popup_div.transition()    
+        .duration(200)    
+        .style("opacity", .9);    
+      popup_div .html("<h2>" + d.student.NAME + "</h2>" + d.student.COURSE +"<br/>" + d.student.HOBBIES);  
+       // .style("left", (d3.event.pageX) + "px")   
+       // .style("top", (d3.event.pageY - 28) + "px");  
     })          
     .on('mouseout', function(d) { 
       if(d.id < 10) return;    
       div.transition()    
+        .duration(500)    
+        .style("opacity", 0); 
+      popup_div.transition()    
         .duration(500)    
         .style("opacity", 0); 
     });
