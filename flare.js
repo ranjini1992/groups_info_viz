@@ -32,10 +32,25 @@ var div = d3.select("body").append("div")
     .attr("class", "tooltip")       
     .style("opacity", 0);
 
+var default_html = "<h2>Information visualization Assignment</h2><h4>"+ 
+      "Smaller circles are students. There are 81 students. </br></br>" +
+      "Hover over the student to see the best skill. The circle colour also represents their best skill. </br></br>"+  
+      "MATHEMATICS : Red </br>"+
+      "PROGRAMMING : Orange </br>"+
+      "CODE REPOSITORY : Yellow </br>"+
+      "USER EXPERIENCE : Dark Green </br>"+
+      "COMMUNICATION : Blue </br>"+
+      "COLLABORATION : Light Blue </br>"+
+      "ART : Pink </br></br>"+
+      "Bigger circles are teams. Each team can have up to 9 students. </br></br>"+ 
+      "Drag links from students to teams and try changing their teams. </br></br> "+
+      "Good teams have at least 3 programmers, 2 communicators or collaborators and 1 artist.</br></br> ";
+
+
 var popup_div = d3.select("body").append("div") 
     .attr("class", "studentDetails")          
     .style("opacity", .9)    
-    .html("<h2>Information visualization Assignment</h2></br> Circle colours: orange or red is programming, blue is communication or collaboration, pink is art, green is UX and info viz.</br> Hover over the circles to see student details.");  
+    .html(default_html);  
 
 var svg = d3.select('body')
   .append('svg')
@@ -43,32 +58,32 @@ var svg = d3.select('body')
   .attr('width', width)
   .attr('height', height);
 
-var skills = ["INFO_VIZ",
+var skills = ["INFO_VISUALIZATION",
    "STATISTICS",
-   "MATH",
+   "MATHEMATICS",
    "ART",
    "COMPUTER_USE",
    "PROGRAMMING",
    "GRAPHIC_PROGRAMMING",
    "HCI_PROGRAMMING",
-   "UX",
+   "USER_EXPERIENCE",
    "COMMUNICATION",
-   "COLLAB",
-   "CODE_REP"]
+   "COLLABORATION",
+   "CODE_REPOSITORY"]
 
 //orange or red is programming, blue is communication collab, pink is art, green is ux info viz
-var skill_colours= ["#00FF11",
-  "#FF8484",
-  "#FF4362",
-  "#F277FF",
-  "#FFAB00",
-  "#FF9100",
-  "#FF6600",
-  "#FFBC00",
-  "#01900A",
-  "#0080FF",
-  "#00DEFF",
-  "#FFE600"
+var skill_colours= ["#00FF11", //green
+  "#FF8484", //light red - peach 
+  "#FF4362", //red
+  "#F277FF", //pink
+  "#FFAB00", //orange
+  "#FF9100", //dark orange
+  "#FF6600", //darker orange
+  "#FFBC00", //gold
+  "#01900A", //dark green
+  "#0080FF", //blue
+  "#00DEFF", //light blue
+  "#FFE600" //yellow
 ]
 
 //good team = 3 programmers, 2 communication/collab, 1 art, 2 others
@@ -113,24 +128,9 @@ var teams =[[],[],[],[],[],[],[],[],[],[]]
       }
       node.top_skill_index = top_skill_index;
       node.colour = skill_colours[top_skill_index];
-
       nodes.push(node);
-  /*    for(var i =0; i < teams.length; i++){
-        if(teams[i].length < 8 ){
-          teams[i].push(node.id)
-          break;
-        }
-      }*/
 
     });
-  /*    for(var i =0; i < teams.length; i++){
-        console.log(teams[i])
-        nodes[i].colour = "#FFFFFF"
-        for(var j =0; j < teams[i].length; j++){
-           var a = {source: nodes[i], target: nodes[teams[i][j]], left: false, right: true };
-           links.push(a);
-        }
-      }*/
 
      restart();
 
@@ -368,7 +368,7 @@ function restart() {
       popup_div.transition()    
         .duration(200)    
         .style("opacity", .9);    
-      popup_div .html("<h2>Information visualization Assignment</h2>");  
+      popup_div .html(default_html);  
     });
 
   // show node IDs
