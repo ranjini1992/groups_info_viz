@@ -44,7 +44,7 @@ var default_html = "<h2>Information visualization Assignment</h2><h4>"+
       "ART : Pink </br></br>"+
       "Bigger circles are teams. Each team can have up to 9 students. </br></br>"+ 
       "Drag links from students to teams and try changing their teams. </br></br> "+
-      "Good teams have at least 3 programmers, 2 communicators or collaborators and 1 artist.</br></br> ";
+      "Good teams have at least 8 members which would include 3 orange, 2 blue, 1 pink and others.</br></br> ";
 
 
 var popup_div = d3.select("body").append("div") 
@@ -97,16 +97,16 @@ var teams =[[],[],[],[],[],[],[],[],[],[]]
 //  - reflexive edges are indicated on the node (as a bold black circle).
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
   var nodes = [
-    {id: 0, reflexive: true, colour: "#FFFFFF"},
-    {id: 1, reflexive: true, colour: "#FFFFFF"},
-    {id: 2, reflexive: true, colour: "#FFFFFF"},
-    {id: 3, reflexive: true, colour: "#FFFFFF"},
-    {id: 4, reflexive: true, colour: "#FFFFFF"},
-    {id: 5, reflexive: true, colour: "#FFFFFF"},
-    {id: 6, reflexive: true, colour: "#FFFFFF"},
-    {id: 7, reflexive: true, colour: "#FFFFFF"},
-    {id: 8, reflexive: true, colour: "#FFFFFF"},
-    {id: 9, reflexive: true, colour: "#FFFFFF"}],
+    {id: 0, reflexive: true, colour: "#FFFFFF", good_team: true},
+    {id: 1, reflexive: true, colour: "#FFFFFF", good_team: false},
+    {id: 2, reflexive: true, colour: "#FFFFFF", good_team: false},
+    {id: 3, reflexive: true, colour: "#FFFFFF", good_team: false},
+    {id: 4, reflexive: true, colour: "#FFFFFF", good_team: false},
+    {id: 5, reflexive: true, colour: "#FFFFFF", good_team: false},
+    {id: 6, reflexive: true, colour: "#FFFFFF", good_team: false},
+    {id: 7, reflexive: true, colour: "#FFFFFF", good_team: false},
+    {id: 8, reflexive: true, colour: "#FFFFFF", good_team: false},
+    {id: 9, reflexive: true, colour: "#FFFFFF", good_team: false}],
   lastNodeId = 9,
   links = [];
 
@@ -215,6 +215,30 @@ function tick() {
 
 // update graph (called when needed)
 function restart() {
+
+  for(var i= 0; i<teams.length; i++){
+    nodes[i].good_team = false;
+    if(teams[i].length >= 8){
+      var computer  = 0;
+      var collab = 0;
+      var artist = 0
+      for(var j = 0; j<teams[i].length; j++){
+        var top_skill = nodes[teams[i][j]].top_skill_index;
+        if(top_skill >= 4 && top_skill <= 7){
+          computer++;
+        }
+        else if(top_skill == 9 || top_skill == 10){
+          collab++;
+        }
+        else if(top_skill == 3 ){
+          artist++;
+        }
+      }
+      if(computer >= 3 && collab >= 2 && artist >=1){
+        nodes[i].good_team = true;
+      }
+    }
+  }
   // path (link) group
   path = path.data(links);
 
@@ -251,6 +275,7 @@ function restart() {
   circle.selectAll('circle')
     .style('fill', function(d) { return d.colour; })
     .classed('reflexive', function(d) { return d.reflexive; });
+
 
   // add new nodes
   var g = circle.enter().append('svg:g');
@@ -347,7 +372,17 @@ function restart() {
       restart();
     })
     .on('mouseover', function(d) { 
-      if(d.reflexive) return;    
+      if(d.reflexive) {
+        if(d.good_team){
+          div.transition()    
+              .duration(200)    
+              .style("opacity", .9);    
+          div .html("GOOD TEAM!")  
+              .style("left", (d3.event.pageX) + "px")   
+              .style("top", (d3.event.pageY - 28) + "px");  
+        }
+        return;
+      }     
       div.transition()    
         .duration(200)    
         .style("opacity", .9);    
@@ -361,7 +396,14 @@ function restart() {
       
     })          
     .on('mouseout', function(d) { 
-      if(d.reflexive) return;    
+      if(d.reflexive) {
+        if(d.good_team){
+           div.transition()    
+            .duration(500)    
+            .style("opacity", 0); 
+        }
+        return;
+      }     
       div.transition()    
         .duration(500)    
         .style("opacity", 0); 
@@ -372,12 +414,16 @@ function restart() {
     });
 
   // show node IDs
-
   g.append('svg:text')
       .attr('x', 0)
       .attr('y', 4)
       .attr('class', 'id')
-      .text(function(d) { if(d.reflexive) return "Team " + (d.id+1); return (d.id - 9); });
+      .text(function(d) { 
+        if(d.reflexive){
+          return "Team " + (d.id+1);
+        }
+        return (d.id - 9); });
+        
 
   // remove old nodes
   circle.exit().remove();
