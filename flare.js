@@ -372,16 +372,21 @@ function restart() {
       restart();
     })
     .on('mouseover', function(d) { 
+      var message = ""
       if(d.reflexive) {
-        if(!d.good_team){
-          console.log(d3.select(this));
-          div.transition()    
+        if(d.good_team){
+          d3.select(this).style("fill", "LIGHTSEAGREEN");
+          message = "Good Team!";
+        }else{
+           d3.select(this).style("fill", "LIGHTCORAL");
+          message = "Add skilled students";
+        }
+        div.transition()    
               .duration(200)    
               .style("opacity", .9);    
-          div .html("GOOD TEAM!")  
+          div .html(message)  
               .style("left", (d3.event.pageX) + "px")   
-              .style("top", (d3.event.pageY - 28) + "px");  
-        }
+              .style("top", (d3.event.pageY - 28) + "px"); 
         return;
       }     
       div.transition()    
@@ -394,8 +399,8 @@ function restart() {
         .duration(200)    
         .style("opacity", .9);
       popup_div .html("<h2>" + d.student.NAME + "</h2><h3>" 
-        + d.student.MAJOR + "<br/>" + d.student.COURSE +"</h3><h4>" 
-        + d.student.HOBBIES + "</h4><br/>"
+        + d.student.MAJOR + "<br/>" + d.student.COURSE +"</h3><h4><i>\"" 
+        + d.student.HOBBIES + "\"</i></h4><br/>"
         + "INFO VISUALIZATION: " + d.student.INFO_VISUALIZATION + "<br/>"
         + "STATISTICS: " + d.student.STATISTICS + "<br/>"
         + "MATHEMATICS: " + d.student.MATHEMATICS + "<br/>"
@@ -412,20 +417,17 @@ function restart() {
     })          
     .on('mouseout', function(d) { 
       if(d.reflexive) {
-        if(d.good_team){
-           div.transition()    
-            .duration(500)    
-            .style("opacity", 0); 
-        }
-        return;
-      }     
+        d3.select(this).style("fill", "white");
+      }   
+      else{
+        popup_div.transition()    
+          .duration(200)    
+          .style("opacity", .9);    
+        popup_div .html(default_html);  
+      }
       div.transition()    
         .duration(500)    
         .style("opacity", 0); 
-      popup_div.transition()    
-        .duration(200)    
-        .style("opacity", .9);    
-      popup_div .html(default_html);  
     });
 
   // show node IDs
