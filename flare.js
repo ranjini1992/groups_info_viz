@@ -32,19 +32,19 @@ var div = d3.select("body").append("div")
     .attr("class", "tooltip")       
     .style("opacity", 0);
 
-var default_html = "<h2>Information visualization Assignment</h2><h4>"+ 
-      "Smaller circles are students. There are 81 students. </br></br>" +
-      "Hover over the student to see the best skill. The circle colour also represents their best skill. </br></br>"+  
+var default_html = "<h2>Information visualization Assignment</h2>"+ 
+      "<h3>81 Students</h3>" +
+      "Hover over the small circles to see each student's best skill. The circle colour also represents their best skill. </br></br>"+  
       "MATHEMATICS : Red </br>"+
       "PROGRAMMING : Orange </br>"+
       "CODE REPOSITORY : Yellow </br>"+
       "USER EXPERIENCE : Dark Green </br>"+
       "COMMUNICATION : Blue </br>"+
       "COLLABORATION : Light Blue </br>"+
-      "ART : Pink </br></br>"+
-      "Bigger circles are teams. Each team can have up to 9 students. </br></br>"+ 
+      "ART : Pink </br>"+
+      "<h3>10 Teams</h3> Each team can have up to 9 students. </br></br>"+ 
       "Drag links from students to teams and try changing their teams. </br></br> "+
-      "Good teams have at least 8 members which would include 3 orange, 2 blue, 1 pink and others.</br></br> ";
+      "<h3>What are good teams?</h3> Good teams have at least 8 members which would include 3 orange, 2 blue, 1 pink and others.</br></br> ";
 
 
 var popup_div = d3.select("body").append("div") 
@@ -287,12 +287,12 @@ function restart() {
     .style('stroke', function(d) { return d3.rgb(colors(d.id)).darker().toString(); })
     .classed('reflexive', function(d) { return d.reflexive; })
     .on('mouseover', function(d) {
-      if(!mousedown_node || d === mousedown_node) return;
+     // if(!mousedown_node || d === mousedown_node) return;
       //enlarge target node
-      d3.select(this).attr('transform', 'scale(1.1)');
+      d3.select(this).attr('transform', 'scale(2)');
     })
     .on('mouseout', function(d) {
-      if(!mousedown_node || d === mousedown_node) return;
+    //  if(!mousedown_node || d === mousedown_node) return;
       // unenlarge target node
       d3.select(this).attr('transform', '');
     })
@@ -373,7 +373,8 @@ function restart() {
     })
     .on('mouseover', function(d) { 
       if(d.reflexive) {
-        if(d.good_team){
+        if(!d.good_team){
+          console.log(d3.select(this));
           div.transition()    
               .duration(200)    
               .style("opacity", .9);    
@@ -392,7 +393,21 @@ function restart() {
       popup_div.transition()    
         .duration(200)    
         .style("opacity", .9);
-      popup_div .html("<h2>" + d.student.NAME + "</h2><h4>" + d.student.MAJOR + "<br/>" + d.student.COURSE +"</h4><br/>" + d.student.HOBBIES);  
+      popup_div .html("<h2>" + d.student.NAME + "</h2><h3>" 
+        + d.student.MAJOR + "<br/>" + d.student.COURSE +"</h3><h4>" 
+        + d.student.HOBBIES + "</h4><br/>"
+        + "INFO VISUALIZATION: " + d.student.INFO_VISUALIZATION + "<br/>"
+        + "STATISTICS: " + d.student.STATISTICS + "<br/>"
+        + "MATHEMATICS: " + d.student.MATHEMATICS + "<br/>"
+        + "COMPUTER USE: " + d.student.COMPUTER_USE + "<br/>"
+        + "CODE REPOSITORY: " + d.student.CODE_REPOSITORY + "<br/>"  
+        + "PROGRAMMING: " + d.student.PROGRAMMING + "<br/>"
+        + "GRAPHIC PROGRAMMING: " + d.student.GRAPHIC_PROGRAMMING + "<br/>"
+        + "HCI PROGRAMMING: " + d.student.HCI_PROGRAMMING + "<br/>"
+        + "USER_EXPERIENCE: " + d.student.USER_EXPERIENCE + "<br/>"
+        + "ART: " + d.student.ART + "<br/>"
+        + "COMMUNICATION: " + d.student.COMMUNICATION + "<br/>"
+        + "COLLABORATION: " + d.student.COLLABORATION)
       
     })          
     .on('mouseout', function(d) { 
@@ -422,15 +437,9 @@ function restart() {
         if(d.reflexive){
           return "Team " + (d.id+1);
         }
-     //   return (d.id - 9); 
+        return "ʘ‿ʘ"
     });
- /*   g.append("image")
-        .attr("xlink:href", function(d) { return d.reflexive ? "" : "https://github.com/favicon.ico"; })
-        .attr("x", -8)
-        .attr("y", -8)
-        .attr("width", 16)
-        .attr("height", 16);
-  */
+  g.append('text')
 
   // remove old nodes
   circle.exit().remove();
