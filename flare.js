@@ -422,8 +422,15 @@ function restart() {
         if(d.reflexive){
           return "Team " + (d.id+1);
         }
-        return (d.id - 9); });
-        
+     //   return (d.id - 9); 
+    });
+ /*   g.append("image")
+        .attr("xlink:href", function(d) { return d.reflexive ? "" : "https://github.com/favicon.ico"; })
+        .attr("x", -8)
+        .attr("y", -8)
+        .attr("width", 16)
+        .attr("height", 16);
+  */
 
   // remove old nodes
   circle.exit().remove();
