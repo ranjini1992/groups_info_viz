@@ -118,14 +118,23 @@ var teams =[[],[],[],[],[],[],[],[],[],[]]
       node = {id: ++lastNodeId, reflexive: false};
       node.x = 50;
       node.y = 50;
-      node.student = student;
+
+      //description text
+      //node.student = student;
+      var description = "<h2>" + student.NAME + "</h2><h3>" 
+        + student.MAJOR + "<br/>" + student.COURSE +"</h3>";
+        if(student.HOBBIES) { description = description + "<h4><i>\"" + student.HOBBIES + "\"</i></h4><br/>"; }
+      description = description + "<h4> Skills (out of 10) </h4>";
       node.team = -1;
       top_skill_index = 0;
       for(var i =0; i < skills.length; i++){
         if(Number(student[skills[i]]) > Number(student[skills[top_skill_index]])){
           top_skill_index = i;
         }
+        if(student[skills[i]] >= 5 )   { description = description + skills[i] + ": " + student[skills[i]] + "<br/>" }
+ 
       }
+      node.description = description;
       node.top_skill_index = top_skill_index;
       node.colour = skill_colours[top_skill_index];
       nodes.push(node);
@@ -372,14 +381,14 @@ function restart() {
       restart();
     })
     .on('mouseover', function(d) { 
-      var message = ""
+      var message = "";
       if(d.reflexive) {
         if(d.good_team){
           d3.select(this).style("fill", "LIGHTSEAGREEN");
           message = "Good Team!";
         }else{
            d3.select(this).style("fill", "LIGHTCORAL");
-          message = "Add skilled students";
+          message = "Try to make a better team";
         }
         div.transition()    
               .duration(200)    
@@ -389,30 +398,19 @@ function restart() {
               .style("top", (d3.event.pageY - 28) + "px"); 
         return;
       }     
+      d3.select(this).attr({
+        r: 20
+      });
       div.transition()    
         .duration(200)    
         .style("opacity", .9);    
-      div .html(skills[d.top_skill_index])  
+      div .html("Good at " + skills[d.top_skill_index].toLowerCase())  
         .style("left", (d3.event.pageX) + "px")   
         .style("top", (d3.event.pageY - 28) + "px");  
       popup_div.transition()    
         .duration(200)    
         .style("opacity", .9);
-      popup_div .html("<h2>" + d.student.NAME + "</h2><h3>" 
-        + d.student.MAJOR + "<br/>" + d.student.COURSE +"</h3><h4><i>\"" 
-        + d.student.HOBBIES + "\"</i></h4><br/>"
-        + "INFO VISUALIZATION: " + d.student.INFO_VISUALIZATION + "<br/>"
-        + "STATISTICS: " + d.student.STATISTICS + "<br/>"
-        + "MATHEMATICS: " + d.student.MATHEMATICS + "<br/>"
-        + "COMPUTER USE: " + d.student.COMPUTER_USE + "<br/>"
-        + "CODE REPOSITORY: " + d.student.CODE_REPOSITORY + "<br/>"  
-        + "PROGRAMMING: " + d.student.PROGRAMMING + "<br/>"
-        + "GRAPHIC PROGRAMMING: " + d.student.GRAPHIC_PROGRAMMING + "<br/>"
-        + "HCI PROGRAMMING: " + d.student.HCI_PROGRAMMING + "<br/>"
-        + "USER_EXPERIENCE: " + d.student.USER_EXPERIENCE + "<br/>"
-        + "ART: " + d.student.ART + "<br/>"
-        + "COMMUNICATION: " + d.student.COMMUNICATION + "<br/>"
-        + "COLLABORATION: " + d.student.COLLABORATION)
+        popup_div .html(d.description);
       
     })          
     .on('mouseout', function(d) { 
@@ -420,6 +418,9 @@ function restart() {
         d3.select(this).style("fill", "white");
       }   
       else{
+        d3.select(this).attr({
+          r: 15
+        });
         popup_div.transition()    
           .duration(200)    
           .style("opacity", .9);    
@@ -439,9 +440,9 @@ function restart() {
         if(d.reflexive){
           return "Team " + (d.id+1);
         }
-        return "ʘ‿ʘ"
-    });
-  g.append('text')
+        return "ʘ‿ʘ";
+      });
+
 
   // remove old nodes
   circle.exit().remove();
