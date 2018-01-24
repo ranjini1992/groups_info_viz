@@ -41,10 +41,9 @@ var default_html = "<h2>Information visualization Assignment</h2>"+
       "USER EXPERIENCE : Dark Green </br>"+
       "COMMUNICATION : Blue </br>"+
       "COLLABORATION : Light Blue </br>"+
-      "ART : Pink </br>"+
-      "<h3>10 Teams</h3> Each team can have up to 9 students. </br></br>"+ 
-      "Drag links from students to teams and try changing their teams. </br></br> "+
-      "<h3>What are good teams?</h3> Good teams have at least 8 members which would include 3 orange, 2 blue, 1 pink and others.</br></br> ";
+      "ART : Pink </br><br><br>"+
+      "Drag links from students to teams. </br></br> "+
+      "<h3>What are good teams? <br><br>Atleast 3 orange <br>Atleast 2 blue <br>Atleast 1 pink  <br> 8 or 9 students</h3> ";
 
 
 var popup_div = d3.select("body").append("div") 
@@ -97,16 +96,16 @@ var teams =[[],[],[],[],[],[],[],[],[],[]]
 //  - reflexive edges are indicated on the node (as a bold black circle).
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
   var nodes = [
-    {id: 0, reflexive: true, colour: "#FFFFFF", good_team: true},
-    {id: 1, reflexive: true, colour: "#FFFFFF", good_team: false},
-    {id: 2, reflexive: true, colour: "#FFFFFF", good_team: false},
-    {id: 3, reflexive: true, colour: "#FFFFFF", good_team: false},
-    {id: 4, reflexive: true, colour: "#FFFFFF", good_team: false},
-    {id: 5, reflexive: true, colour: "#FFFFFF", good_team: false},
-    {id: 6, reflexive: true, colour: "#FFFFFF", good_team: false},
-    {id: 7, reflexive: true, colour: "#FFFFFF", good_team: false},
-    {id: 8, reflexive: true, colour: "#FFFFFF", good_team: false},
-    {id: 9, reflexive: true, colour: "#FFFFFF", good_team: false}],
+    {id: 0, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 1" },
+    {id: 1, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 2"},
+    {id: 2, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 3"},
+    {id: 3, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 4"},
+    {id: 4, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 5"},
+    {id: 5, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 6"},
+    {id: 6, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 7"},
+    {id: 7, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 8"},
+    {id: 8, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 9"},
+    {id: 9, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 10"}],
   lastNodeId = 9,
   links = [];
 
@@ -118,6 +117,7 @@ var teams =[[],[],[],[],[],[],[],[],[],[]]
       node = {id: ++lastNodeId, reflexive: false};
       node.x = 50;
       node.y = 50;
+      node.title = "ʘ_ʘ";
 
       //description text
       //node.student = student;
@@ -296,14 +296,58 @@ function restart() {
     .style('stroke', function(d) { return d3.rgb(colors(d.id)).darker().toString(); })
     .classed('reflexive', function(d) { return d.reflexive; })
     .on('mouseover', function(d) {
-     // if(!mousedown_node || d === mousedown_node) return;
-      //enlarge target node
-      d3.select(this).attr('transform', 'scale(2)');
-    })
+          var message = "";
+          if(d.reflexive) {
+            if(d.good_team){
+              d3.select(this).style("fill", "LIGHTSEAGREEN");
+              message = "Good Team!";
+            }else{
+              if(teams[d.id].length < 8){
+               message = "Add students to the team";
+              }else{
+               message = "Diversify the student skills";
+              }
+            }
+            div.transition()    
+                  .duration(200)    
+                  .style("opacity", .9);    
+              div .html(message)  
+                  .style("left", (d3.event.pageX) + "px")   
+                  .style("top", (d3.event.pageY - 28) + "px"); 
+            return;
+          } 
+          d3.select(this).attr({
+            r: 20
+          });
+
+          div.transition()    
+            .duration(200)    
+            .style("opacity", .9);    
+          div .html("Good at " + skills[d.top_skill_index].toLowerCase())  
+            .style("left", (d3.event.pageX) + "px")   
+            .style("top", (d3.event.pageY - 28) + "px");  
+          popup_div.transition()    
+            .duration(200)    
+            .style("opacity", .9);
+            popup_div .html(d.description);
+          
+        })
     .on('mouseout', function(d) {
-    //  if(!mousedown_node || d === mousedown_node) return;
-      // unenlarge target node
-      d3.select(this).attr('transform', '');
+      if(d.reflexive) {
+        d3.select(this).style("fill", "white");
+      }   
+      else{
+        d3.select(this).attr({
+          r: 15
+        });
+        popup_div.transition()    
+          .duration(200)    
+          .style("opacity", .9);    
+        popup_div .html(default_html);  
+      }
+      div.transition()    
+        .duration(500)    
+        .style("opacity", 0); 
     })
     .on('mousedown', function(d) {
       if(d.reflexive) return;
@@ -331,12 +375,15 @@ function restart() {
         }
         mousedown_node.team = d.id;
         teams[d.id].push(mousedown_node.id)
-      }else{
-        return;
       }
 
+      var text = d3.select('svg').selectAll('text')[0]
 
-
+      for (var i=0; i<text.length; i++){
+          if(i == mousedown_node.id){
+            text[i].innerHTML = "ʘ‿ʘ";
+        }
+      }
       // needed by FF
       drag_line
         .classed('hidden', true)
@@ -379,70 +426,15 @@ function restart() {
       selected_link = link;
       selected_node = null;
       restart();
-    })
-    .on('mouseover', function(d) { 
-      var message = "";
-      if(d.reflexive) {
-        if(d.good_team){
-          d3.select(this).style("fill", "LIGHTSEAGREEN");
-          message = "Good Team!";
-        }else{
-           d3.select(this).style("fill", "LIGHTCORAL");
-          message = "Try to make a better team";
-        }
-        div.transition()    
-              .duration(200)    
-              .style("opacity", .9);    
-          div .html(message)  
-              .style("left", (d3.event.pageX) + "px")   
-              .style("top", (d3.event.pageY - 28) + "px"); 
-        return;
-      }     
-      d3.select(this).attr({
-        r: 20
-      });
-      div.transition()    
-        .duration(200)    
-        .style("opacity", .9);    
-      div .html("Good at " + skills[d.top_skill_index].toLowerCase())  
-        .style("left", (d3.event.pageX) + "px")   
-        .style("top", (d3.event.pageY - 28) + "px");  
-      popup_div.transition()    
-        .duration(200)    
-        .style("opacity", .9);
-        popup_div .html(d.description);
-      
-    })          
-    .on('mouseout', function(d) { 
-      if(d.reflexive) {
-        d3.select(this).style("fill", "white");
-      }   
-      else{
-        d3.select(this).attr({
-          r: 15
-        });
-        popup_div.transition()    
-          .duration(200)    
-          .style("opacity", .9);    
-        popup_div .html(default_html);  
-      }
-      div.transition()    
-        .duration(500)    
-        .style("opacity", 0); 
     });
 
-  // show node IDs
-  g.append('svg:text')
+   g.append('svg:text')
       .attr('x', 0)
       .attr('y', 4)
       .attr('class', 'id')
-      .text(function(d) { 
-        if(d.reflexive){
-          return "Team " + (d.id+1);
-        }
-        return "ʘ‿ʘ";
-      });
+      .text(function(d) {return d.title});
 
+    
 
   // remove old nodes
   circle.exit().remove();
@@ -452,19 +444,11 @@ function restart() {
 }
 
 function mousedown() {
-  // prevent I-bar on drag
-  //d3.event.preventDefault();
 
-  // because :active only works in WebKit?
   svg.classed('active', true);
 
   if( mousedown_node || mousedown_link) return;
-  // insert new node at point
- /* var point = d3.mouse(this),
-      node = {id: ++lastNodeId, reflexive: false};
-  node.x = point[0];
-  node.y = point[1];
-  nodes.push(node);*/
+
 
   restart();
 }
@@ -500,6 +484,13 @@ function spliceLinksForNode(source_node, target_node) {
   toSplice.map(function(l) {
     links.splice(links.indexOf(l), 1);
   });
+
+  for (var key = teams[target_node.team].length - 1; key >= 0; key --) {
+        if (teams[target_node.team][key] === target_node.id) {
+            teams[target_node.team].splice(key, 1);
+            break;       
+        }
+    }
 }
 
 
