@@ -32,9 +32,9 @@ var div = d3.select("body").append("div")
     .attr("class", "tooltip")       
     .style("opacity", 0);
 
-var default_html = "<h2>Information visualization Assignment</h2>"+ 
-      "<h3>81 Students</h3>" +
-      "Hover over the small circles to see each student's best skill. The circle colour also represents their best skill. </br></br>"+  
+var default_html = "<h2>Sorting Hat for new wizards in Hogwarts</h2>"+ 
+      "Drag wizards (small circles) to their teams (big circles). </br></br> "+
+      "Hover over wizards to see their best skill </br></br>"+  
       "MATHEMATICS : Red </br>"+
       "PROGRAMMING : Orange </br>"+
       "CODE REPOSITORY : Yellow </br>"+
@@ -42,8 +42,7 @@ var default_html = "<h2>Information visualization Assignment</h2>"+
       "COMMUNICATION : Blue </br>"+
       "COLLABORATION : Light Blue </br>"+
       "ART : Pink </br><br><br>"+
-      "Drag links from students to teams. </br></br> "+
-      "<h3>What are good teams? <br><br>Atleast 3 orange <br>Atleast 2 blue <br>Atleast 1 pink  <br> 8 or 9 students</h3> ";
+      "<h3>What are good teams? <br><br>Atleast... <br>2 Orange (Computer savvy) <br>2 Blue (Team bonders) <br>1 Pink (Artist) <br><br> Total: 8 or 9 wizards</h3> ";
 
 
 var popup_div = d3.select("body").append("div") 
@@ -96,16 +95,16 @@ var teams =[[],[],[],[],[],[],[],[],[],[]]
 //  - reflexive edges are indicated on the node (as a bold black circle).
 //  - links are always source < target; edge directions are set by 'left' and 'right'.
   var nodes = [
-    {id: 0, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 1" },
-    {id: 1, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 2"},
-    {id: 2, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 3"},
-    {id: 3, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 4"},
-    {id: 4, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 5"},
-    {id: 5, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 6"},
-    {id: 6, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 7"},
-    {id: 7, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 8"},
-    {id: 8, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 9"},
-    {id: 9, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Team 10"}],
+    {id: 0, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Quizard" },
+    {id: 1, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Nitwit"},
+    {id: 2, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Quibler"},
+    {id: 3, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Diadem"},
+    {id: 4, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Snitch"},
+    {id: 5, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Fawks"},
+    {id: 6, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Jinx"},
+    {id: 7, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Muggle"},
+    {id: 8, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Ferret"},
+    {id: 9, reflexive: true, colour: "#FFFFFF", good_team: false, title: "Animagi"}],
   lastNodeId = 9,
   links = [];
 
@@ -243,7 +242,7 @@ function restart() {
           artist++;
         }
       }
-      if(computer >= 3 && collab >= 2 && artist >=1){
+      if(computer >= 2 && collab >= 2 && artist >=1){
         nodes[i].good_team = true;
       }
     }
@@ -302,10 +301,10 @@ function restart() {
               d3.select(this).style("fill", "LIGHTSEAGREEN");
               message = "Good Team!";
             }else{
-              if(teams[d.id].length < 8){
-               message = "Add students to the team";
+              if(teams[d.id].length == 0){
+               message = "Add wizards to the team";
               }else{
-               message = "Diversify the student skills";
+               message = "Diversify team skills";
               }
             }
             div.transition()    
