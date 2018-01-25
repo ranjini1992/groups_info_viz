@@ -374,57 +374,58 @@ function restart() {
         }
         mousedown_node.team = d.id;
         teams[d.id].push(mousedown_node.id)
-      }
+     
 
-      var text = d3.select('svg').selectAll('text')[0]
+        var text = d3.select('svg').selectAll('text')[0]
 
-      for (var i=0; i<text.length; i++){
-          if(i == mousedown_node.id){
-            text[i].innerHTML = "ʘ‿ʘ";
+        for (var i=0; i<text.length; i++){
+            if(i == mousedown_node.id){
+              text[i].innerHTML = "ʘ‿ʘ";
+          }
         }
-      }
       // needed by FF
-      drag_line
-        .classed('hidden', true)
-        .style('marker-end', '');
+        drag_line
+          .classed('hidden', true)
+          .style('marker-end', '');
 
       // check for drag-to-self
-      mouseup_node = d;
-      if(mouseup_node === mousedown_node) { resetMouseVars(); return; }
+        mouseup_node = d;
+        if(mouseup_node === mousedown_node) { resetMouseVars(); return; }
 
-      // unenlarge target node
-      d3.select(this).attr('transform', '');
+        // unenlarge target node
+        d3.select(this).attr('transform', '');
 
-      // add link to graph (update if exists)
-      // NB: links are strictly source < target; arrows separately specified by booleans
-      var source, target, direction;
-      if(mousedown_node.id < mouseup_node.id) {
-        source = mousedown_node;
-        target = mouseup_node;
-        direction = 'right';
-      } else {
-        source = mouseup_node;
-        target = mousedown_node;
-        direction = 'left';
+        // add link to graph (update if exists)
+        // NB: links are strictly source < target; arrows separately specified by booleans
+        var source, target, direction;
+        if(mousedown_node.id < mouseup_node.id) {
+          source = mousedown_node;
+          target = mouseup_node;
+          direction = 'right';
+        } else {
+          source = mouseup_node;
+          target = mousedown_node;
+          direction = 'left';
+        }
+
+        var link;
+        link = links.filter(function(l) {
+          return (l.source === source && l.target === target);
+        })[0];
+
+        if(link) {
+          link[direction] = true;
+        } else {
+          link = {source: source, target: target, left: false, right: false};
+          link[direction] = true;
+          links.push(link);
+        }
+
+        // select new link
+        selected_link = link;
+        selected_node = null;
+        restart();
       }
-
-      var link;
-      link = links.filter(function(l) {
-        return (l.source === source && l.target === target);
-      })[0];
-
-      if(link) {
-        link[direction] = true;
-      } else {
-        link = {source: source, target: target, left: false, right: false};
-        link[direction] = true;
-        links.push(link);
-      }
-
-      // select new link
-      selected_link = link;
-      selected_node = null;
-      restart();
     });
 
    g.append('svg:text')
